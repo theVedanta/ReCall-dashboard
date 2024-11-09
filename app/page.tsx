@@ -1,109 +1,34 @@
 "use client";
+import React from "react";
+import Spline from "@splinetool/react-spline";
+import Link from "next/link";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
-
-const WebcamVideoStream: React.FC = () => {
-    const [isStreaming, setIsStreaming] = useState<boolean>(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const webSocketRef = useRef<WebSocket | null>(null);
-
-    useEffect(() => {
-        const startWebcamStream = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                });
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-                setIsStreaming(true);
-
-                // Connect to the WebSocket endpoint
-                connectToWebSocket(stream);
-            } catch (error) {
-                console.error("Error accessing webcam:", error);
-            }
-        };
-
-        if (isStreaming) {
-            startWebcamStream();
-        }
-
-        return () => {
-            if (webSocketRef.current) {
-                webSocketRef.current.close();
-            }
-        };
-    }, [isStreaming]);
-
-    const handleStartStop = () => {
-        setIsStreaming((prev) => !prev);
-    };
-
-    const connectToWebSocket = (stream: MediaStream) => {
-        const webSocket = new WebSocket("http://localhost:8000/api/live-video");
-
-        webSocket.onopen = () => {
-            console.log("WebSocket connection established.");
-
-            // Start streaming video data to the WebSocket
-            const mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-
-            mediaRecorder.addEventListener("dataavailable", (event) => {
-                if (webSocket.readyState === webSocket.OPEN) {
-                    webSocket.send(event.data);
-                }
-            });
-        };
-
-        webSocket.onclose = () => {
-            console.log("WebSocket connection closed.");
-        };
-
-        webSocket.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        webSocket.onmessage = (event) => {
-            // Handle any data received from the server
-            console.log("Received data from server:", event.data);
-        };
-
-        webSocketRef.current = webSocket;
-    };
-
+const Hero = () => {
     return (
-        <div className="flex h-screen w-screen overflow-hidden items-center justify-center">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle>Webcam Video Streaming to API</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex justify-center">
-                        <video
-                            ref={videoRef}
-                            className="w-full max-w-[640px] h-auto"
-                            autoPlay
-                            playsInline
-                        />
-                    </div>
-                    <div className="flex justify-center mt-4">
-                        <Button
-                            type="button"
-                            variant={isStreaming ? "destructive" : "default"}
-                            onClick={handleStartStop}
-                        >
-                            {isStreaming ? "Stop" : "Start"} Streaming
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
+        <div className="h-screen w-full overflow-y-auto">
+            <div className="relative h-screen">
+                {/* Background 3D Spline Scene */}
+                <Spline scene="https://prod.spline.design/8QuOI7F99R6CthFH/scene.splinecode" />
+            </div>
+
+            {/* Scrollable content */}
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-20 w-full flex justify-center items-center">
+                <div className="flex gap-10">
+                    <Link href="/user">
+                        <button className="px-20 py-3 bg-white text-black text-lg rounded-md font-semibold hover:shadow-lg transform transition-transform duration-300 hover:scale-110">
+                            User Dashboard
+                        </button>
+                    </Link>
+                    <button className="px-20 py-3 bg-white text-black text-lg rounded-md font-semibold hover:shadow-lg transform transition-transform duration-300 hover:scale-110">
+                        Medical Dashboard
+                    </button>
+                    <button className="px-20 py-3 bg-white text-black text-lg rounded-md font-semibold hover:shadow-lg transform transition-transform duration-300 hover:scale-110">
+                        ReConverse
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default WebcamVideoStream;
+export default Hero;
