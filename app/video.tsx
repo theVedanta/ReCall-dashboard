@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const WebcamVideoStream: React.FC = () => {
     const [isStreaming, setIsStreaming] = useState<boolean>(false);
