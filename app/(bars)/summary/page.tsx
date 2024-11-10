@@ -460,12 +460,26 @@ const Summary = () => {
 
                 <div className="w-[60%]">
                     <Card className="h-full p-6">
-                        <CardTitle className="mb-2 text-xl font-semibold">
-                            Brain Activity Heatmap
-                        </CardTitle>
-                        <CardDescription className="mb-6 text-base text-black">
-                            Daily cognitive activity levels over the past year
-                        </CardDescription>
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <CardTitle className="mb-2 text-xl font-semibold">
+                                    Physical Activity Heatmap
+                                </CardTitle>
+                                <CardDescription className="mb-6 text-base text-black">
+                                    Daily cognitive activity levels over the
+                                    past year
+                                </CardDescription>
+                            </div>
+
+                            <Link href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3207358/">
+                                <Button
+                                    className="bg-blu rounded-full"
+                                    size="icon"
+                                >
+                                    <File />
+                                </Button>
+                            </Link>
+                        </div>
 
                         <ChartContainer
                             config={{

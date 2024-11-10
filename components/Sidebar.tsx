@@ -14,12 +14,12 @@ const Sidebar = () => {
     const sidebarItems = [
         {
             icon: <PersonIcon className={iconClassName} />,
-            text: "Guardian Information",
+            text: "Relations",
             link: "/user",
         },
         {
             icon: <Blocks className={iconClassName} />,
-            text: "Medical Dashboard",
+            text: "Medical",
             link: "/medical",
         },
         {
