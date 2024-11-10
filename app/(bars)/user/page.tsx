@@ -26,6 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import Pagination from "@/components/Pagination";
 import { v4 as uuidv4 } from "uuid";
+import { faker } from "@faker-js/faker";
 
 type Relation = {
     id: number;
@@ -41,6 +42,8 @@ const AddRelationDialog = () => {
         name: "",
         relationship: "",
         photo: null,
+        email: "",
+        phone: ""
     });
     const [previewUrl, setPreviewUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
@@ -92,7 +95,7 @@ const AddRelationDialog = () => {
                 relation: { ...formData, id: uuidv4() },
             });
             setOpen(false);
-            setFormData({ name: "", relationship: "", photo: null });
+            setFormData({ name: "", relationship: "", photo: null, email: "", phone: "" });
             setPreviewUrl("");
             // You might want to trigger a refresh of the relations list here
         } catch (error) {
@@ -148,6 +151,8 @@ const AddRelationDialog = () => {
                                     <TableHead>Relation</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Relationship</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Phone</TableHead>
                                     <TableHead>More Info</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -156,7 +161,7 @@ const AddRelationDialog = () => {
                                 {[...relations].reverse().map((relation) => (
                                     <TableRow key={relation.id}>
                                         <TableCell className="flex items-center gap-2">
-                                            <Avatar>
+                                            <Avatar className="w-16 h-16">
                                                 <AvatarImage
                                                     src={relation.photo}
                                                     alt={relation.name}
@@ -171,9 +176,9 @@ const AddRelationDialog = () => {
                                             </Avatar>
                                         </TableCell>
                                         <TableCell>{relation.name}</TableCell>
-                                        <TableCell>
-                                            {relation.relationship}
-                                        </TableCell>
+                                        <TableCell>{relation.relationship}</TableCell>
+                                        <TableCell>{relation.email || faker.internet.email()}</TableCell>
+                                        <TableCell>{faker.phone.number()}</TableCell>
                                         <TableCell>
                                             <Link
                                                 href={`/user/${relation.name}`}

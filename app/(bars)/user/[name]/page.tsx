@@ -20,6 +20,21 @@ import { Badge } from "@/components/ui/badge";
 import ProgressCircle from "../ProgressCircle";
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+    ChartLegend,
+    ChartLegendContent,
+} from "@/components/ui/chart";
+import {
+    Radar as RechartsRadar,
+    RadarChart,
+    PolarGrid,
+    PolarAngleAxis,
+    PolarRadiusAxis,
+    ResponsiveContainer,
+} from "recharts";
 
 const RecommendationsContent = ({ userName }: { userName: string }) => {
     const [user, setUser] = useState<{
@@ -120,6 +135,54 @@ const RecommendationsContent = ({ userName }: { userName: string }) => {
         }
     }
 
+    const radarData = [
+        {
+            subject: "Memory",
+            current: 65,
+            previous: 78,
+            fullMark: 100,
+        },
+        {
+            subject: "Attention",
+            current: 59,
+            previous: 48,
+            fullMark: 100,
+        },
+        {
+            subject: "Language",
+            current: 90,
+            previous: 85,
+            fullMark: 100,
+        },
+        {
+            subject: "Spatial",
+            current: 81,
+            previous: 76,
+            fullMark: 100,
+        },
+        {
+            subject: "Function",
+            current: 56,
+            previous: 63,
+            fullMark: 100,
+        },
+    ];
+
+    const generateContributions = () => {
+        const contributions = [];
+        for (let i = 0; i < 7; i++) {
+            const weekData = [];
+            for (let j = 0; j < 5; j++) {
+                const value = Math.floor(Math.random() * 4); // 0-3 for contribution levels
+                weekData.push(value);
+            }
+            contributions.push(weekData);
+        }
+        return contributions;
+    };
+
+    const contributionData = generateContributions();
+
     return (
         <>
             <div className="w-full">
@@ -215,7 +278,6 @@ const RecommendationsContent = ({ userName }: { userName: string }) => {
                         "Social Intelligence",
                         "Emotional Resilience",
                         "Inner Harmony",
-                        "Leadership Potential",
                     ].map((title, i) => {
                         const value = Math.floor(Math.random() * 100);
                         const color =
@@ -273,9 +335,36 @@ const RecommendationsContent = ({ userName }: { userName: string }) => {
                             </div>
                         );
                     })}
-                </div>
 
-                
+                    <Card className="h-[300px]">
+                        <CardContent className="p-4">
+                            <h3 className="mb-2 text-lg font-semibold">
+                                Cognitive Function Assessment
+                            </h3>
+                            <ResponsiveContainer width="100%" height={240}>
+                                <RadarChart data={radarData}>
+                                    <PolarGrid />
+                                    <PolarAngleAxis dataKey="subject" />
+                                    <PolarRadiusAxis />
+                                    <RechartsRadar
+                                        name="Current"
+                                        dataKey="current"
+                                        stroke="#8884d8"
+                                        fill="#8884d8"
+                                        fillOpacity={0.6}
+                                    />
+                                    <RechartsRadar
+                                        name="Previous"
+                                        dataKey="previous"
+                                        stroke="#82ca9d"
+                                        fill="#82ca9d"
+                                        fillOpacity={0.6}
+                                    />
+                                </RadarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </>
     );

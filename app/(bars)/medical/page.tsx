@@ -101,7 +101,7 @@ export default function Home() {
                             {[...relations].reverse().map((relation) => (
                                 <TableRow key={relation.id}>
                                     <TableCell className="flex items-center gap-2">
-                                        <Avatar>
+                                        <Avatar className="w-16 h-16">
                                             <AvatarImage
                                                 src={relation.photo}
                                                 alt={relation.name}
@@ -136,22 +136,24 @@ export default function Home() {
                                         {relation.count && relation.count.value}
                                     </TableCell>
                                     <TableCell>
-                                        {new Date(
-                                            relation.count &&
-                                                relation.count.first
-                                        ).toLocaleString()}
+                                        {relation.count && relation.count.first
+                                            ? new Date(
+                                                  relation.count.first
+                                              ).toLocaleString()
+                                            : "-"}
                                     </TableCell>
                                     <TableCell>
-                                        {new Date(
-                                            relation.count &&
-                                                relation.count.last
-                                        ).toLocaleString()}
+                                        {relation.count && relation.count.last
+                                            ? new Date(
+                                                  relation.count.last
+                                              ).toLocaleString()
+                                            : "-"}
                                     </TableCell>
                                     <TableCell>
                                         <Link href={`/user/${relation.name}`}>
                                             <Button
                                                 className="bg-blu"
-                                                size="sm"
+                                                size="lg"
                                             >
                                                 View
                                             </Button>

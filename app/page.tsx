@@ -2,6 +2,7 @@
 import React from "react";
 import Spline from "@splinetool/react-spline";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, User, BriefcaseMedical } from "lucide-react";
 
 const Hero = () => {
     return (
@@ -10,21 +11,20 @@ const Hero = () => {
                 <Spline scene="https://prod.spline.design/iXWp5T2scXWGQstp/scene.splinecode" />
             </div>
 
-            {/* Scrollable content */}
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-20 w-full flex justify-center items-center">
-                <div className="flex gap-10">
-                    <Link href="/user">
-                        <button className="px-20 py-3 bg-transparent text-slate-800 rounded-full border-2 border-slate-800 text-lg font-semibold hover:shadow-lg transform transition-transform duration-300 hover:scale-110">
-                            User Dashboard
-                        </button>
-                    </Link>
-                    <Link
-                        href="/medical"
-                        className="px-20 py-3 bg-transparent text-slate-800 rounded-full border-2 border-slate-800 text-lg font-semibold hover:shadow-lg transform transition-transform duration-300 hover:scale-110"
-                    >
-                        Medical Dashboard
-                    </Link>
-                </div>
+            {/* Navigation buttons */}
+            <div className="absolute top-1/2 w-full flex justify-between items-center px-8 -translate-y-1/2">
+                <Link href="/user">
+                    <div className="flex items-center gap-2 text-slate-800 hover:text-slate-600 transition-colors">
+                        <ArrowLeft size={44} />
+                        <User size={44} />
+                    </div>
+                </Link>
+                <Link href="/medical">
+                    <div className="flex items-center gap-2 text-slate-800 hover:text-slate-600 transition-colors">
+                        <BriefcaseMedical size={44} />
+                        <ArrowRight size={44} />
+                    </div>
+                </Link>
             </div>
         </div>
     );
