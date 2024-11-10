@@ -100,9 +100,14 @@ const AddRelationDialog = () => {
     };
 
     useEffect(() => {
-        axios.get(`${API_URL}/get-user`).then((res) => {
-            setRelations(res.data.relations);
-        });
+        axios
+            .get(`${API_URL}/get-user`)
+            .then((res) => {
+                setRelations(res.data.relations);
+            })
+            .catch((error) => {
+                console.log("ERROR: ", error);
+            });
     }, [open]);
 
     return (

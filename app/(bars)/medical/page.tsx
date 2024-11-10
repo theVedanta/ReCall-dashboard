@@ -46,8 +46,13 @@ type Relation = {
 // ];
 
 export default async function Home() {
-    const res = await axios.get(`${API_URL}/get-user`);
-    const relations: Relation[] = res.data.relations;
+    let relations: Relation[] = [];
+    try {
+        const res = await axios.get(`${API_URL}/get-user`);
+        relations = res.data.relations;
+    } catch (error) {
+        console.log("ERROR: ", error);
+    }
 
     return (
         <div
