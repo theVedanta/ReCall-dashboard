@@ -193,7 +193,7 @@ const AddRelationDialog = () => {
                         <span className="text-muted-foreground">
                             Showing<span className="mx-2">—</span>
                             <span className="text-blu">
-                                10 results per page
+                                {relations.length} results per page
                             </span>
                         </span>
 

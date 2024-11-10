@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonIcon } from "@radix-ui/react-icons";
+import { CubeIcon, PersonIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { NAV_HEIGHT } from "@/lib/constants";
 import { useState } from "react";
@@ -14,13 +14,18 @@ const Sidebar = () => {
     const sidebarItems = [
         {
             icon: <PersonIcon className={iconClassName} />,
-            text: "User Information",
+            text: "Guardian Information",
             link: "/user",
         },
         {
             icon: <Blocks className={iconClassName} />,
             text: "Medical Dashboard",
             link: "/medical",
+        },
+        {
+            icon: <CubeIcon className={iconClassName} />,
+            text: "Summary",
+            link: "/summary",
         },
     ];
 

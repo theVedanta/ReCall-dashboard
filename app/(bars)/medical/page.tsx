@@ -166,7 +166,9 @@ export default function Home() {
                 <div className="mt-2 flex items-center justify-between border-t border-muted pt-4">
                     <span className="text-muted-foreground">
                         Showing<span className="mx-2">—</span>
-                        <span className="text-blu">10 results per page</span>
+                        <span className="text-blu">
+                            {relations.length} results per page
+                        </span>
                     </span>
                 </div>
             </div>
