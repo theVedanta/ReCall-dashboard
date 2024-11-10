@@ -23,6 +23,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import Pagination from "@/components/Pagination";
 
 type Relation = {
     id: number;
@@ -140,7 +142,7 @@ const AddRelationDialog = () => {
                                     <TableHead>Relation</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Relationship</TableHead>
-                                    <TableHead></TableHead>
+                                    <TableCell>Reminders</TableCell>
                                 </TableRow>
                             </TableHeader>
 
@@ -166,12 +168,11 @@ const AddRelationDialog = () => {
                                             {relation.relationship}
                                         </TableCell>
                                         <TableCell>
-                                            <Button
-                                                className="bg-blu"
-                                                size="sm"
-                                            >
-                                                View
-                                            </Button>
+                                            <Link href="/user/reminders">
+                                                <Button className="bg-blu">
+                                                    View
+                                                </Button>
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -186,6 +187,12 @@ const AddRelationDialog = () => {
                                 10 results per page
                             </span>
                         </span>
+
+                        <Pagination
+                            setPage={() => {}}
+                            page={1}
+                            totalPages={2}
+                        />
                     </div>
                 </div>
             </div>

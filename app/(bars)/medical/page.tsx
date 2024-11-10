@@ -12,6 +12,8 @@ import {
 import { Search } from "lucide-react";
 import { API_URL, NAV_HEIGHT } from "@/lib/constants";
 import axios from "axios";
+import Link from "next/link";
+import Pagination from "@/components/Pagination";
 
 type Relation = {
     id: number;
@@ -104,7 +106,20 @@ export default async function Home() {
                                     <TableCell>
                                         {relation.relationship}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell
+                                        className={
+                                            (relation.count &&
+                                            relation.count.value &&
+                                            relation.count.value < 3
+                                                ? `text-emerald-600`
+                                                : relation.count &&
+                                                  relation.count.value &&
+                                                  relation.count.value > 6
+                                                ? "text-rose-600"
+                                                : "text-amber-600") +
+                                            " font-bold"
+                                        }
+                                    >
                                         {relation.count && relation.count.value}
                                     </TableCell>
                                     <TableCell>
@@ -120,9 +135,14 @@ export default async function Home() {
                                         ).toLocaleString()}
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="sm" className="bg-blu">
-                                            View
-                                        </Button>
+                                        <Link href="/user/34324">
+                                            <Button
+                                                className="bg-blu"
+                                                size="sm"
+                                            >
+                                                View
+                                            </Button>
+                                        </Link>
                                     </TableCell>
                                 </TableRow>
                             ))}
