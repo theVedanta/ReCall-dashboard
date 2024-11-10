@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import Pagination from "@/components/Pagination";
+import { v4 as uuidv4 } from "uuid";
 
 type Relation = {
     id: number;
@@ -88,7 +89,7 @@ const AddRelationDialog = () => {
 
         try {
             await axios.post(`${API_URL}/add-relation`, {
-                relation: formData,
+                relation: { ...formData, id: uuidv4() },
             });
             setOpen(false);
             setFormData({ name: "", relationship: "", photo: null });

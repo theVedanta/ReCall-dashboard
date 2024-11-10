@@ -41,6 +41,7 @@ import {
 } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 const chartData = [
     { tag: "Healthy", count: 605, fill: "hsl(var(--chart-2))" },
@@ -632,12 +633,13 @@ const RecommendationsContent = ({ userName }: { userName: string }) => {
     );
 };
 
-const Recommendations = ({ params }: { params: { name: string } }) => {
-    const name = params.name;
+const Recommendations = () => {
+    const params = useParams();
+    const name = params.name || "Vedanta Somnathe";
 
     return (
         <Suspense fallback={<Loading />}>
-            <RecommendationsContent userName={name} />
+            <RecommendationsContent userName={name as string} />
         </Suspense>
     );
 };
