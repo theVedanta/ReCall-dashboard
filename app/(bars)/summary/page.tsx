@@ -253,12 +253,12 @@ const Summary = () => {
                     {
                         title: "Total healthy social interactions",
                         count: 605,
-                        change: "+131 since last year",
+                        change: "+131 since last month",
                     },
                     {
-                        title: "Daily movement patterns",
-                        count: 342,
-                        change: "+12 since last year",
+                        title: "Daily steps",
+                        count: 8000,
+                        change: "+1200 since yesterday",
                     },
                     {
                         title: "Mood Tracking",
