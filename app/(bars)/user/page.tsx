@@ -153,13 +153,14 @@ const AddRelationDialog = () => {
                             </TableHeader>
 
                             <TableBody>
-                                {relations.map((relation) => (
+                                {[...relations].reverse().map((relation) => (
                                     <TableRow key={relation.id}>
                                         <TableCell className="flex items-center gap-2">
                                             <Avatar>
                                                 <AvatarImage
                                                     src={relation.photo}
                                                     alt={relation.name}
+                                                    className="object-cover"
                                                 />
                                                 <AvatarFallback>
                                                     {relation.name
