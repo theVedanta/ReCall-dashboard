@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -13,7 +15,7 @@ import { Search } from "lucide-react";
 import { API_URL, NAV_HEIGHT } from "@/lib/constants";
 import axios from "axios";
 import Link from "next/link";
-import Pagination from "@/components/Pagination";
+import { useEffect, useState } from "react";
 
 type Relation = {
     id: number;
@@ -45,14 +47,19 @@ type Relation = {
 //     },
 // ];
 
-export default async function Home() {
-    let relations: Relation[] = [];
-    try {
-        const res = await axios.get(`${API_URL}/get-user`);
-        relations = res.data.relations;
-    } catch (error) {
-        console.log("ERROR: ", error);
-    }
+export default function Home() {
+    const [relations, setRelations] = useState<Relation[]>([]);
+
+    useEffect(() => {
+        try {
+            (async () => {
+                const res = await axios.get(`${API_URL}/get-user`);
+                setRelations(res.data.relations);
+            })();
+        } catch (error) {
+            console.log("ERROR: ", error);
+        }
+    }, []);
 
     return (
         <div
