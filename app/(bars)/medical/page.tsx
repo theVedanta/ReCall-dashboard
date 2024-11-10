@@ -140,7 +140,7 @@ export default async function Home() {
                                         ).toLocaleString()}
                                     </TableCell>
                                     <TableCell>
-                                        <Link href="/user/34324">
+                                        <Link href={`/user/${relation.name}`}>
                                             <Button
                                                 className="bg-blu"
                                                 size="sm"

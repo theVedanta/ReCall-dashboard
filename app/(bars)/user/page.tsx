@@ -147,7 +147,7 @@ const AddRelationDialog = () => {
                                     <TableHead>Relation</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Relationship</TableHead>
-                                    <TableCell>Reminders</TableCell>
+                                    <TableHead>More Info</TableHead>
                                 </TableRow>
                             </TableHeader>
 
@@ -173,9 +173,11 @@ const AddRelationDialog = () => {
                                             {relation.relationship}
                                         </TableCell>
                                         <TableCell>
-                                            <Link href="/user/reminders">
+                                            <Link
+                                                href={`/user/${relation.name}`}
+                                            >
                                                 <Button className="bg-blu">
-                                                    View
+                                                    More Info
                                                 </Button>
                                             </Link>
                                         </TableCell>

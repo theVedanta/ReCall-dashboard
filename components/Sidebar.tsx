@@ -13,12 +13,12 @@ const Sidebar = () => {
     const iconClassName = "w-6 h-6";
     const sidebarItems = [
         {
-            icon: <Blocks className={iconClassName} />,
+            icon: <PersonIcon className={iconClassName} />,
             text: "User Information",
             link: "/user",
         },
         {
-            icon: <PersonIcon className={iconClassName} />,
+            icon: <Blocks className={iconClassName} />,
             text: "Medical Dashboard",
             link: "/medical",
         },

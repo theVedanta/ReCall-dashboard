@@ -1,12 +1,10 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Info, Mail } from "lucide-react";
 import { CustomIcon } from "@/components/CustomIcon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
 import {
     Tooltip,
     TooltipContent,
@@ -70,10 +68,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-const RecommendationsContent = () => {
-    const searchParams = useSearchParams();
-    const userEmail = searchParams.get("email") || "vedanta1412@gmail.com";
-
+const RecommendationsContent = ({ userName }: { userName: string }) => {
     const [user, setUser] = useState<{
         email: string;
         name: string;
@@ -129,8 +124,8 @@ const RecommendationsContent = () => {
     };
 
     useEffect(() => {
-        const generateFakeUser = (email: string) => {
-            const seed = email.split("@")[0];
+        const generateFakeUser = (name: string) => {
+            const seed = name;
             faker.seed(
                 seed
                     .split("")
@@ -138,14 +133,14 @@ const RecommendationsContent = () => {
             );
 
             return {
-                email: email,
-                name: faker.person.fullName(),
+                email: faker.internet.email(),
+                name,
                 image: faker.image.avatar(),
             };
         };
 
         try {
-            const fakeUser = generateFakeUser(userEmail);
+            const fakeUser = generateFakeUser(userName);
 
             setUser(fakeUser);
             setIsLoading(false);
@@ -153,7 +148,7 @@ const RecommendationsContent = () => {
             setError(err as Error);
             setIsLoading(false);
         }
-    }, [userEmail]);
+    }, [userName]);
 
     if (isLoading) return <Loading />;
     if (error) return <div>Error: {error.message}</div>;
@@ -376,12 +371,7 @@ const RecommendationsContent = () => {
                                         : "green";
 
                                 return (
-                                    <Link
-                                        key={i}
-                                        href={`/vitals/${title}?name=${encodeURIComponent(
-                                            user.name
-                                        )}`}
-                                    >
+                                    <div key={i} className="cursor-pointer">
                                         <Card className="h-full cursor-pointer transition-all hover:shadow-xl">
                                             <CardContent className="p-6">
                                                 <h3 className="mb-8 flex w-full items-center justify-center text-lg font-semibold text-muted-foreground">
@@ -429,7 +419,7 @@ const RecommendationsContent = () => {
                                                 </p>
                                             </CardContent>
                                         </Card>
-                                    </Link>
+                                    </div>
                                 );
                             })}
                         </div>
@@ -642,10 +632,12 @@ const RecommendationsContent = () => {
     );
 };
 
-const Recommendations = () => {
+const Recommendations = ({ params }: { params: { name: string } }) => {
+    const name = params.name;
+
     return (
         <Suspense fallback={<Loading />}>
-            <RecommendationsContent />
+            <RecommendationsContent userName={name} />
         </Suspense>
     );
 };
