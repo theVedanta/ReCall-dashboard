@@ -43,7 +43,7 @@ const AddRelationDialog = () => {
         relationship: "",
         photo: null,
         email: "",
-        phone: ""
+        phone: "",
     });
     const [previewUrl, setPreviewUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
@@ -95,7 +95,13 @@ const AddRelationDialog = () => {
                 relation: { ...formData, id: uuidv4() },
             });
             setOpen(false);
-            setFormData({ name: "", relationship: "", photo: null, email: "", phone: "" });
+            setFormData({
+                name: "",
+                relationship: "",
+                photo: null,
+                email: "",
+                phone: "",
+            });
             setPreviewUrl("");
             // You might want to trigger a refresh of the relations list here
         } catch (error) {
@@ -176,9 +182,16 @@ const AddRelationDialog = () => {
                                             </Avatar>
                                         </TableCell>
                                         <TableCell>{relation.name}</TableCell>
-                                        <TableCell>{relation.relationship}</TableCell>
-                                        <TableCell>{relation.email || faker.internet.email()}</TableCell>
-                                        <TableCell>{faker.phone.number()}</TableCell>
+                                        <TableCell>
+                                            {relation.relationship}
+                                        </TableCell>
+                                        <TableCell>
+                                            {relation.email ||
+                                                faker.internet.email()}
+                                        </TableCell>
+                                        <TableCell>
+                                            {faker.phone.number().slice(0, 13)}
+                                        </TableCell>
                                         <TableCell>
                                             <Link
                                                 href={`/user/${relation.name}`}

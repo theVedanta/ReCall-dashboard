@@ -11,7 +11,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Tooltip } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, File, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import {
     LineChart,
@@ -27,29 +27,72 @@ import {
 } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { GoogleMap, useLoadScript, HeatmapLayer } from "@react-google-maps/api";
+import Link from "next/link";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 const chartData = [
-    { tag: "Healthy", count: 605, fill: "hsl(var(--chart-2))" },
-    { tag: "Moderate", count: 342, fill: "hsl(var(--chart-4))" },
-    { tag: "Unhealthy", count: 231, fill: "hsl(var(--chart-5))" },
-    { tag: "Critical", count: 81, fill: "hsl(var(--chart-1))" },
+    { tag: "Confident", count: 605, fill: "hsl(var(--chart-2))" },
+    { tag: "Neutral", count: 342, fill: "hsl(var(--chart-4))" },
+    { tag: "Anxious", count: 231, fill: "hsl(var(--chart-5))" },
+    { tag: "Angry", count: 81, fill: "hsl(var(--chart-1))" },
 ];
 
+const dialogContent = {
+    Confident: {
+        title: "Confident Conversations",
+        description: "Analysis of confident communication patterns",
+        points: [
+            "The patient confidently reassures his family about repairing an old watch, drawing on years of experience and inspiring his grandson's admiration",
+            "When met with skepticism, the patient expresses unwavering self-assurance in his watch repair abilities, demonstrating pride in his lifelong skills",
+        ],
+    },
+    Neutral: {
+        title: "Neutral Interactions",
+        description: "Balanced communication patterns",
+        points: [
+            "During a family dinner discussion, the patient responds neutrally to spaghetti as the meal choice, showing comfort with routine family exchanges",
+            "The patient casually participates in meal planning, agreeably accepting his daughter's spaghetti suggestion with a relaxed attitude",
+        ],
+    },
+    Anxious: {
+        title: "Anxious Communication Patterns",
+        description: "Signs of anxiety in conversations",
+        points: [
+            "The patient shows anxiety about an upcoming doctor's appointment, expressing unease with hospitals despite family reassurance",
+            "Feeling anxious about a medical checkup, the patient seeks comfort from his children while revealing fears about the unknown",
+        ],
+    },
+    Angry: {
+        title: "Angry Interactions",
+        description: "Patterns indicating frustration or anger",
+        points: [
+            "The patient reacts angrily upon discovering his belongings were moved without permission, asserting his need for autonomy",
+            "When his personal space is rearranged, the patient becomes frustrated and expresses his desire for control over his surroundings",
+        ],
+    },
+};
+
 const chartConfig = {
-    healthy: {
-        label: "Healthy",
+    confident: {
+        label: "Confident",
         color: "hsl(var(--chart-2))",
     },
-    moderate: {
-        label: "Moderately Healthy",
+    neutral: {
+        label: "Neutral",
         color: "hsl(var(--chart-4))",
     },
-    unhealthy: {
-        label: "Unhealthy",
+    anxious: {
+        label: "Anxious",
         color: "hsl(var(--chart-5))",
     },
-    critical: {
-        label: "Critical",
+    angry: {
+        label: "Angry",
         color: "hsl(var(--chart-1))",
     },
 } satisfies ChartConfig;
@@ -87,12 +130,6 @@ const lineChartData = {
         { month: "Week 3", percentage: 75 },
         { month: "Week 4", percentage: 90 },
     ],
-    Quarterly: [
-        { month: "Q1", percentage: 40 },
-        { month: "Q2", percentage: 65 },
-        { month: "Q3", percentage: 80 },
-        { month: "Q4", percentage: 70 },
-    ],
 };
 
 // Sample heatmap data - replace with actual patient location data
@@ -104,12 +141,14 @@ const heatmapData = [
 ];
 
 const Summary = () => {
-    const [timeFrame, setTimeFrame] = useState<
-        "Yearly" | "Monthly" | "Quarterly"
-    >("Yearly");
+    const [timeFrame, setTimeFrame] = useState<"Yearly" | "Monthly">("Yearly");
     const [activeIndex, setActiveIndex] = useState<number | undefined>(
         undefined
     );
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedMood, setSelectedMood] = useState<
+        keyof typeof dialogContent | null
+    >(null);
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
@@ -121,8 +160,47 @@ const Summary = () => {
         zoom: 13,
     };
 
+    const handlePieClick = (data: { tag: keyof typeof dialogContent }) => {
+        setSelectedMood(data.tag);
+        setDialogOpen(true);
+    };
+
     return (
         <>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                {selectedMood && (
+                    <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold">
+                                {dialogContent[selectedMood].title}
+                            </DialogTitle>
+                            <DialogDescription className="text-lg mt-2">
+                                {dialogContent[selectedMood].description}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="mt-6">
+                            <ul className="space-y-4">
+                                {dialogContent[selectedMood].points.map(
+                                    (point, index) => (
+                                        <li
+                                            key={index}
+                                            className="flex items-start"
+                                        >
+                                            <span className="mr-2 text-lg">
+                                                •
+                                            </span>
+                                            <span className="text-lg">
+                                                {point}
+                                            </span>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    </DialogContent>
+                )}
+            </Dialog>
+
             <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center">
                     <h2 className="mr-4 text-lg font-semibold">
@@ -167,17 +245,6 @@ const Summary = () => {
                     >
                         Monthly
                     </Button>
-                    <Button
-                        className={
-                            timeFrame === "Quarterly"
-                                ? "bg-blu text-white"
-                                : "text-gray-700"
-                        }
-                        variant="ghost"
-                        onClick={() => setTimeFrame("Quarterly")}
-                    >
-                        Quarterly
-                    </Button>
                 </div>
             </div>
 
@@ -220,7 +287,7 @@ const Summary = () => {
                 <div className="mt-6 w-[40%]">
                     <Card className="h-full w-full p-6">
                         <CardTitle className="mb-2 text-xl font-semibold">
-                            Cognition Conversation Percentage
+                            Conversational Semantic Analysis
                         </CardTitle>
 
                         <ChartContainer
@@ -243,6 +310,7 @@ const Summary = () => {
                                     nameKey="tag"
                                     innerRadius={90}
                                     activeIndex={activeIndex}
+                                    onClick={handlePieClick}
                                     onMouseEnter={(data, index) => {
                                         setActiveIndex(index);
                                     }}
@@ -271,13 +339,26 @@ const Summary = () => {
 
                 <div className="mt-6 w-[60%]">
                     <Card className="h-full p-6">
-                        <CardTitle className="mb-2 text-xl font-semibold">
-                            Overall Health Assessment
-                        </CardTitle>
-                        <CardDescription className="mb-6 text-base text-black">
-                            Tracking general wellness indicators and vitals over
-                            time
-                        </CardDescription>
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <CardTitle className="mb-2 text-xl font-semibold">
+                                    Overall Health Assessment
+                                </CardTitle>
+                                <CardDescription className="mb-6 text-base text-black">
+                                    Tracking general wellness indicators and
+                                    vitals over time
+                                </CardDescription>
+                            </div>
+
+                            <Link href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6611150/">
+                                <Button
+                                    className="bg-blu rounded-full"
+                                    size="icon"
+                                >
+                                    <File />
+                                </Button>
+                            </Link>
+                        </div>
 
                         <ChartContainer
                             config={{
@@ -311,7 +392,7 @@ const Summary = () => {
                             </LineChart>
                         </ChartContainer>
 
-                        <p className="mt-4 flex items-center text-sm font-medium text-emerald-600">
+                        <p className="mt-4 flex items-center text-lg font-semibold text-emerald-600">
                             11% improvement from last month
                             <TrendingUp className="ml-2" />
                         </p>
@@ -380,70 +461,70 @@ const Summary = () => {
                 <div className="w-[60%]">
                     <Card className="h-full p-6">
                         <CardTitle className="mb-2 text-xl font-semibold">
-                            Brain Function Analysis
+                            Brain Activity Heatmap
                         </CardTitle>
                         <CardDescription className="mb-6 text-base text-black">
-                            Detailed breakdown of memory retention and cognitive
-                            processing abilities
+                            Daily cognitive activity levels over the past year
                         </CardDescription>
 
                         <ChartContainer
                             config={{
-                                memory: {
-                                    label: "Memory Score",
+                                activity: {
+                                    label: "Activity Level",
                                     color: "hsl(var(--chart-2))",
-                                },
-                                cognitive: {
-                                    label: "Cognitive Score",
-                                    color: "hsl(var(--chart-4))",
                                 },
                             }}
                             className="h-[30vh] w-full"
                         >
-                            <AreaChart
-                                data={[
-                                    { month: "Jan", memory: 65, cognitive: 70 },
-                                    { month: "Feb", memory: 68, cognitive: 72 },
-                                    { month: "Mar", memory: 75, cognitive: 22 },
-                                    { month: "Apr", memory: 72, cognitive: 75 },
-                                    { month: "May", memory: 78, cognitive: 53 },
-                                    { month: "Jun", memory: 82, cognitive: 85 },
-                                ]}
+                            <div
+                                className="grid gap-1"
+                                style={{
+                                    gridTemplateColumns: "repeat(36, 1fr)",
+                                }}
                             >
-                                <CartesianGrid
-                                    strokeDasharray="3 3"
-                                    stroke="#e0e0e0"
-                                    vertical={false}
-                                />
-                                <XAxis dataKey="month" />
-                                <YAxis
-                                    domain={[0, 100]}
-                                    tickFormatter={(tick) => `${tick}%`}
-                                />
-                                <Tooltip />
-                                <Area
-                                    type="monotone"
-                                    dataKey="memory"
-                                    stroke="hsl(var(--chart-4))"
-                                    fill="hsl(var(--chart-4))"
-                                    fillOpacity={0.3}
-                                    strokeWidth={2}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="cognitive"
-                                    stroke="hsl(var(--chart-1))"
-                                    fill="hsl(var(--chart-1))"
-                                    fillOpacity={0.3}
-                                    strokeWidth={2}
-                                />
-                            </AreaChart>
+                                {Array.from({ length: 36 * 16 }).map((_, i) => {
+                                    const activityLevel = Math.random();
+
+                                    let bgColor = "bg-gray-100";
+                                    if (activityLevel > 0.75) {
+                                        bgColor = "bg-emerald-500";
+                                    } else if (activityLevel > 0.5) {
+                                        bgColor = "bg-emerald-400";
+                                    } else if (activityLevel > 0.25) {
+                                        bgColor = "bg-emerald-300";
+                                    } else if (activityLevel > 0) {
+                                        bgColor = "bg-emerald-100";
+                                    }
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={`w-4 h-4 rounded-sm ${bgColor}`}
+                                            title={`Activity Level: ${Math.round(
+                                                activityLevel * 100
+                                            )}%`}
+                                        />
+                                    );
+                                })}
+                            </div>
                         </ChartContainer>
 
-                        <p className="mt-4 flex items-center text-sm font-medium text-emerald-600">
-                            15% improvement in overall cognitive scores
-                            <TrendingUp className="ml-2" />
-                        </p>
+                        <div className="mt-4 flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <span>Less</span>
+                                <div className="flex gap-1">
+                                    <div className="w-3 h-3 rounded-sm bg-gray-100" />
+                                    <div className="w-3 h-3 rounded-sm bg-emerald-200" />
+                                    <div className="w-3 h-3 rounded-sm bg-emerald-300" />
+                                    <div className="w-3 h-3 rounded-sm bg-emerald-400" />
+                                    <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                                </div>
+                                <span>More</span>
+                            </div>
+                            <p className="flex items-center text-sm font-medium text-emerald-600">
+                                Strong activity pattern detected
+                                <TrendingUp className="ml-2" />
+                            </p>
+                        </div>
                     </Card>
                 </div>
             </div>
